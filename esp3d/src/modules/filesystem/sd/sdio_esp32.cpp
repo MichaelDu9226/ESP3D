@@ -29,7 +29,7 @@ sdio_esp32.cpp - ESP3D sd support class
 
 extern File tSDFile_handle[ESP_MAX_SD_OPENHANDLE];
 
-#define SDMMC_FORCE_BEGIN
+//#define SDMMC_FORCE_BEGIN
 
 uint8_t ESP_SD::getState(bool refresh)
 {

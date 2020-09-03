@@ -127,7 +127,7 @@
 //ESP_SD_NATIVE               1 //esp32 / esp8266
 //ESP_SDIO                    2 //esp32 only
 //ESP_SDFAT                   3 //esp8266 (same as native) / esp32
-//#define SD_DEVICE    ESP_SDFAT
+#define SD_DEVICE    ESP_SDIO
 
 //SD Device Connection type (default is direct)
 //ESP_DIRECT_SD
@@ -136,9 +136,9 @@
 
 //pin if reader has insert detection feature
 //let -1 or comment if none
-#define ESP_SD_DETECT_PIN       -1
+#define ESP_SD_DETECT_PIN       37
 //value expected for ESP_SD_DETECT_PIN
-#define ESP_SD_DETECT_VALUE      1
+#define ESP_SD_DETECT_VALUE      0
 
 //FILESYSTEM_FEATURE: to host some files on flash
 //ESP_SPIFFS_FILESYSTEM       0
@@ -238,7 +238,7 @@
 //DEBUG_OUTPUT_SERIAL2 3
 //DEBUG_OUTPUT_TELNET  4
 //DEBUG_OUTPUT_WEBSOCKET  5
-//#define ESP_DEBUG_FEATURE DEBUG_OUTPUT_SERIAL0
+#define ESP_DEBUG_FEATURE DEBUG_OUTPUT_SERIAL0
 
 #ifdef ESP_DEBUG_FEATURE
 #define DEBUG_ESP3D_OUTPUT_PORT  8000
@@ -259,10 +259,10 @@
 //USE_SERIAL_0 for ESP8266/32
 //USE_SERIAL_1 for ESP8266/32
 //USE_SERIAL_2 for ESP32 Only
-#define ESP_SERIAL_OUTPUT USE_SERIAL_0
+#define ESP_SERIAL_OUTPUT USE_SERIAL_1
 
 //Serial rx buffer size is 256 but can be extended
-#define SERIAL_RX_BUFFER_SIZE 512
+#define SERIAL_RX_BUFFER_SIZE 2048
 
 /************************************
  *

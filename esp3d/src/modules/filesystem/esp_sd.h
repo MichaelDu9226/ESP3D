@@ -24,7 +24,7 @@
 #include "../../core/esp3doutput.h"
 #include <time.h>
 
-#define ESP_SD_FS_HEADER "/SD"
+#define ESP_SD_FS_HEADER "/sd"
 
 #define ESP_MAX_SD_OPENHANDLE 4
 

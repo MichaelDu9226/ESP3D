@@ -23,10 +23,10 @@
 //   * UART 0 possible options are (1, 3), (2, 3) or (15, 13)
 //   * UART 1 allows only TX on 2 if UART 0 is not (2, 3)
 #ifndef ESP_RX_PIN
-#define ESP_RX_PIN -1
+#define ESP_RX_PIN 36
 #endif //~ESP_RX_PIN
 #ifndef ESP_TX_PIN
-#define ESP_TX_PIN -1
+#define ESP_TX_PIN 21
 #endif //~ESP_TX_PIN
 
 //I2C Pins
@@ -206,3 +206,4 @@
 //    VSS      GND
 //    D0       2  (add 1K pull up after flashing)
 //    D1       4
+#define BOARD_HAS_1BIT_SDMMC
