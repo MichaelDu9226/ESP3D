@@ -26,6 +26,9 @@
 #include "../../core/esp3doutput.h"
 #include "../serial/serial_service.h"
 #include "../filesystem/esp_filesystem.h"
+#if FTP_FEATURE == FS_ROOT
+#include "../filesystem/esp_globalFS.h"
+#endif //FTP_FEATURE == FS_ROOT
 
 GcodeHost esp3d_gcode_host;
 
@@ -338,6 +341,59 @@ bool GcodeHost::processFSFile(const char * filename, level_authenticate_type aut
     return res;
 }
 
+bool GcodeHost::processSDFile(const char * filename, level_authenticate_type auth_type, ESP3DOutput * output)
+{
+    bool res = true;
+    if (!ESP_GBFS::exists(filename)) {
+        log_esp3d("Cannot find file");
+        return false;
+    }
+    ESP_GBFile f = ESP_GBFS::open(filename);
+    if (!f.isOpen()) {
+        log_esp3d("Cannot open file");
+        return false;
+    }
+    size_t filesize  = f.size();
+    int8_t ch;
+    String cmd = "";
+    for (size_t c = 0; c< filesize ; c++) {
+        ch = f.read();
+        if (ch == -1) {
+            log_esp3d("Error reading file");
+            f.close();
+            return false;
+        }
+        if ((ch == 13)||(ch == 10) || (c==(filesize-1))) {
+            //for end of file without \n neither \r
+            if (!((ch == 13)||(ch == 10)) && (c==(filesize-1))) {
+                cmd+=(char)ch;
+            }
+            cmd.trim();
+            if(cmd.length() > 0) {
+                //ignore  comments
+                if (cmd[0]!=';') {
+                    //it is internal or not ?
+                    if(esp3d_commands.is_esp_command((uint8_t *)cmd.c_str(), cmd.length())) {
+                        esp3d_commands.process((uint8_t *)cmd.c_str(), cmd.length(), output, auth_type);
+                    } else {
+                        if (!sendCommand(cmd.c_str(),false, true)) {
+                            log_esp3d("Error sending command");
+                            //To stop instead of continue may need some trigger
+                            res = false;
+                        }
+                    }
+                }
+                cmd="";
+            }
+
+        } else {
+            cmd+=(char)ch;
+        }
+    }
+    f.close();
+    return res;
+}
+
 bool GcodeHost::processscript(const char * line)
 {
     bool res = true;
@@ -395,6 +451,11 @@ bool GcodeHost::processFile(const char * filename, level_authenticate_type auth_
     if (FileName.startsWith(ESP_FLASH_FS_HEADER)) {
         String f = FileName.substring(strlen(ESP_FLASH_FS_HEADER),FileName.length());
         return processFSFile(f.c_str(), auth_type, output);
+    }
+    if (FileName.startsWith(ESP_SD_FS_HEADER)) {
+        //String f = FileName.substring(strlen(ESP_SD_FS_HEADER),FileName.length());
+        log_esp3d("FileName: %s", FileName.c_str());
+        return processSDFile(FileName.c_str(), auth_type, output);
     }
     //TODO SD = SDCard
     //TODO UD = USB DISK

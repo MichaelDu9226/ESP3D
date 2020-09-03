@@ -72,6 +72,7 @@ public:
         return _error;
     }
     bool processFile(const char * filename, level_authenticate_type auth_type, ESP3DOutput * output);
+    bool processSDFile(const char * filename, level_authenticate_type auth_type, ESP3DOutput * output);
     bool processFSFile(const char * filename, level_authenticate_type auth_type, ESP3DOutput * output);
     bool processLine(const char * line, level_authenticate_type auth_type, ESP3DOutput * output);
     bool processscript(const char * line);

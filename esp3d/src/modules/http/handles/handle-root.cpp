@@ -29,9 +29,13 @@
 #include <ESP8266WebServer.h>
 #endif //ARDUINO_ARCH_ESP8266
 #include "../../filesystem/esp_filesystem.h"
+#if FTP_FEATURE == FS_ROOT
+#include "../../filesystem/esp_globalFS.h"
+#endif //FTP_FEATURE == FS_ROOT
 //Root of Webserver/////////////////////////////////////////////////////
 void HTTP_Server::handle_root()
 {
+#if 0
     String path = "/index.html";
     String contentType =  getContentType(path.c_str());
     String pathWithGz = path + ".gz";
@@ -49,5 +53,24 @@ void HTTP_Server::handle_root()
     //if no lets launch the default content
     _webserver->sendHeader("Content-Encoding", "gzip");
     _webserver->send_P(200,"text/html",(const char *)tool_html_gz,tool_html_gz_size);
+#else
+    String path = "/sd/index.html";
+    String contentType =  getContentType(path.c_str());
+    String pathWithGz = path + ".gz";
+    //if have a index.html or gzip version this is default root page
+    if((ESP_GBFS::exists(pathWithGz.c_str()) || ESP_GBFS::exists(path.c_str())) && !_webserver->hasArg("forcefallback") && _webserver->arg("forcefallback")!="yes") {
+        if(ESP_GBFS::exists(pathWithGz.c_str())) {
+            _webserver->sendHeader("Content-Encoding", "gzip");
+            path = pathWithGz;
+        }
+        if(!StreamSDFile(path.c_str(),contentType.c_str())) {
+            log_esp3d("Stream `%s` failed", path.c_str());
+        }
+        return;
+    }
+    //if no lets launch the default content
+    _webserver->sendHeader("Content-Encoding", "gzip");
+    _webserver->send_P(200,"text/html",(const char *)tool_html_gz,tool_html_gz_size);
+#endif
 }
 #endif //HTTP_FEATURE

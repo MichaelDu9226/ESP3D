@@ -37,6 +37,10 @@
 #include "../filesystem/esp_sd.h"
 
 #endif //SD_DEVICE
+#if FTP_FEATURE == FS_ROOT
+#include "../filesystem/esp_globalFS.h"
+#endif //FTP_FEATURE == FS_ROOT
+
 bool HTTP_Server::_started = false;
 uint16_t HTTP_Server::_port = 0;
 WEBSERVER * HTTP_Server::_webserver = nullptr;
@@ -115,7 +119,8 @@ bool HTTP_Server::StreamFSFile(const char* filename, const char * contentType)
 #if defined (SD_DEVICE)
 bool HTTP_Server::StreamSDFile(const char* filename, const char * contentType)
 {
-    ESP_SDFile datafile = ESP_SD::open(filename);
+    //ESP_SDFile datafile = ESP_SD::open(filename);
+    ESP_GBFile datafile = ESP_GBFS::open(filename);
     if (!datafile) {
         return false;
     }
