@@ -3,11 +3,15 @@
 #define ILI9488_DRIVER
 
 
-// For NodeMCU - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-#define TFT_CS   PIN_D8  // Chip select control pin D8
-#define TFT_DC   PIN_D3  // Data Command control pin
-#define TFT_RST  PIN_D4  // Reset pin (could connect to NodeMCU RST, see next line)
-//#define TFT_RST  -1  // Set TFT_RST to -1 if the display RESET is connected to NodeMCU RST or 3.3V
+#define TFT_MISO 34 // (leave TFT SDO disconnected if other SPI devices share MISO)
+#define TFT_MOSI 32
+#define TFT_SCLK 33
+#define TFT_CS    19  // Chip select control pin
+#define TFT_DC    27  // Data Command control pin
+#define TFT_RST   -1  // Reset pin (could connect to RST pin)
+#define TFT_BL          12  // Display backlight control pin
+
+#define TFT_BACKLIGHT_ON HIGH  // HIGH or LOW are options
 
 
 #define LOAD_GLCD   // Font 1. Original Adafruit 8 pixel font needs ~1820 bytes in FLASH

@@ -394,6 +394,56 @@ bool GcodeHost::processSDFile(const char * filename, level_authenticate_type aut
     return res;
 }
 
+bool GcodeHost::processSDFile(const char * filename)
+{
+    bool res = true;
+    if (!ESP_GBFS::exists(filename)) {
+        log_esp3d("Cannot find file");
+        return false;
+    }
+    ESP_GBFile f = ESP_GBFS::open(filename);
+    if (!f.isOpen()) {
+        log_esp3d("Cannot open file");
+        return false;
+    }
+    size_t filesize  = f.size();
+    int8_t ch;
+    String cmd = "";
+    for (size_t c = 0; c< filesize ; c++) {
+        ch = f.read();
+        if (ch == -1) {
+            log_esp3d("Error reading file");
+            f.close();
+            return false;
+        }
+        if ((ch == 13)||(ch == 10) || (c==(filesize-1))) {
+            //for end of file without \n neither \r
+            if (!((ch == 13)||(ch == 10)) && (c==(filesize-1))) {
+                cmd+=(char)ch;
+            }
+            cmd.trim();
+            if(cmd.length() > 0) {
+                //ignore  comments
+                if (cmd[0]!=';') {
+
+                        if (!sendCommand(cmd.c_str(),false, true)) {
+                            log_esp3d("Error sending command");
+                            //To stop instead of continue may need some trigger
+                            res = false;
+                        }
+
+                }
+                cmd="";
+            }
+
+        } else {
+            cmd+=(char)ch;
+        }
+    }
+    f.close();
+    return res;
+}
+
 bool GcodeHost::processscript(const char * line)
 {
     bool res = true;

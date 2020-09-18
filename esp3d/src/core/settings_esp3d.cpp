@@ -132,7 +132,7 @@
 #define DEFAULT_CAMERA_PORT     9600L
 #define DEFAULT_TELNET_PORT     23L
 #define DEFAULT_SENSOR_INTERVAL 30000L
-#define DEFAULT_BOOT_DELAY      10000L
+#define DEFAULT_BOOT_DELAY      3000L
 #define DEFAULT_CALIBRATION_VALUE 0
 #define DEFAULT_CALIBRATION_DONE 0
 
@@ -165,7 +165,7 @@ const char DEFAULT_SETTINGS_VERSION []  =   "ESP3D";
 
 #if defined (WIFI_FEATURE) ||defined (ETH_FEATURE)
 //default IP values
-const uint8_t DEFAULT_IP_VALUE[]   =       {192, 168, 0, 1};
+const uint8_t DEFAULT_IP_VALUE[]   =       {192, 168, 1, 1};
 const uint8_t DEFAULT_MASK_VALUE[]  =      {255, 255, 255, 0};
 #define DEFAULT_GATEWAY_VALUE           DEFAULT_IP_VALUE
 const uint8_t DEFAULT_ADDRESS_VALUE[]   =  {0, 0, 0, 0};

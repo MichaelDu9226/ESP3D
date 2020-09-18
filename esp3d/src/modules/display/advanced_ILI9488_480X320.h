@@ -18,8 +18,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //Screen size
-#define SCREEN_WIDTH    480
-#define SCREEN_HEIGHT   320
+#define SCREEN_WIDTH    320
+#define SCREEN_HEIGHT   480
 #define SNAP_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT * 4)
 
 #define CALIBRATION_BG TFT_WHITE

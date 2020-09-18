@@ -35,12 +35,22 @@
 #include <lvgl.h>
 #include <Ticker.h>
 #include "lv_flash_drv.h"
+
+#include "dexarm_touchscreen.h"
+//#include "../../modules/filesystem/esp_filesystem.h"
+#include "../gcode_host/gcode_host.h"
+
 //screen  object
 lv_obj_t * esp_lv_screen;
 lv_obj_t * esp_lv_bar_progression;
 lv_obj_t * esp_lv_status_label;
 lv_obj_t * esp_lv_IP_label;
 lv_obj_t * esp_lv_network_label;
+
+lv_obj_t * esp_lv_top_container;
+lv_obj_t * esp_lv_main_container;
+lv_obj_t * esp_lv_ui_container;
+lv_obj_t * esp_lv_bottom_container;
 
 #if defined(DISPLAY_SNAPSHOT_FEATURE)
 static ESP_File fsSnapFile;
@@ -384,9 +394,6 @@ void Display::show_screenID(uint8_t screenID)
         }
         break;
         case MAIN_SCREEN: {
-            lv_obj_t * esp_lv_top_container;
-            lv_obj_t * esp_lv_main_container;
-            lv_obj_t * esp_lv_bottom_container;
             //top
             esp_lv_top_container = lv_obj_create(esp_lv_screen, NULL);
             lv_obj_set_pos(esp_lv_top_container, 0,-10);
@@ -404,22 +411,18 @@ void Display::show_screenID(uint8_t screenID)
             lv_obj_set_pos(esp_lv_network_label, SCREEN_WIDTH-w-5,+15);
             display_network_status(true);
 
-            //main window
-            esp_lv_main_container = lv_obj_create(esp_lv_screen, NULL);
-            lv_obj_set_pos(esp_lv_main_container, 0,30);
-            lv_obj_set_size(esp_lv_main_container, SCREEN_WIDTH, SCREEN_HEIGHT - (2*30));
-            lv_obj_set_style(esp_lv_main_container, &lv_style_scr);
+            show_main_ui(esp_lv_screen);
 
             //bottom
-            esp_lv_bottom_container = lv_obj_create(esp_lv_screen, NULL);
-            lv_obj_set_pos(esp_lv_bottom_container, 0,SCREEN_HEIGHT-30);
-            lv_obj_set_size(esp_lv_bottom_container, SCREEN_WIDTH, 40);
-            lv_obj_set_style(esp_lv_bottom_container, &lv_style_pretty_color);
+            //esp_lv_bottom_container = lv_obj_create(esp_lv_screen, NULL);
+            //lv_obj_set_pos(esp_lv_bottom_container, 0,SCREEN_HEIGHT-30);
+            //lv_obj_set_size(esp_lv_bottom_container, SCREEN_WIDTH, 40);
+            //lv_obj_set_style(esp_lv_bottom_container, &lv_style_pretty_color);
 
             //status label
-            esp_lv_status_label = lv_label_create(esp_lv_bottom_container, NULL);
-            lv_label_set_text(esp_lv_status_label, _status.c_str());
-            lv_obj_align(esp_lv_status_label, NULL, LV_ALIGN_IN_LEFT_MID, 10,-5);
+            //esp_lv_status_label = lv_label_create(esp_lv_bottom_container, NULL);
+            //lv_label_set_text(esp_lv_status_label, _status.c_str());
+            //lv_obj_align(esp_lv_status_label, NULL, LV_ALIGN_IN_LEFT_MID, 10,-5);
 
         }
         break;
@@ -487,7 +490,7 @@ bool Display::begin()
 #endif
     esp3d_screen.begin();               // Initialise the tft display
 #if defined(DISPLAY_FLIP_VERTICALY)
-    esp3d_screen.setRotation(3);
+    esp3d_screen.setRotation(0);
 #else
     esp3d_screen.setRotation(1);
 #endif

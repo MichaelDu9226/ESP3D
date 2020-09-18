@@ -101,8 +101,10 @@ bool Esp3D::begin()
         res = false;
     }
 #endif //FILESYSTEM_FEATURE
+
 #ifdef DISPLAY_DEVICE
-    esp3d_display.show_screenID(MAIN_SCREEN);
+    esp3d_display.startCalibration();
+    //esp3d_display.show_screenID(MAIN_SCREEN);
     log_esp3d("Main screen");
 #endif //DISPLAY_DEVICE
     //Setup Network
