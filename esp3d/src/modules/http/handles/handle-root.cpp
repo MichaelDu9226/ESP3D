@@ -54,7 +54,7 @@ void HTTP_Server::handle_root()
     _webserver->sendHeader("Content-Encoding", "gzip");
     _webserver->send_P(200,"text/html",(const char *)tool_html_gz,tool_html_gz_size);
 #else
-    String path = "/sd/index.html";
+    String path = "/sd/resources/esp3d/index.html";
     String contentType =  getContentType(path.c_str());
     String pathWithGz = path + ".gz";
     //if have a index.html or gzip version this is default root page
